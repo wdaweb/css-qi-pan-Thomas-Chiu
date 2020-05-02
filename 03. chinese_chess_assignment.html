@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Chinese Chess</title>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			list-style: none;
+			font-family: 'Noto Sans TC', '標楷體', sans-serif;
+			box-sizing: border-box;
+		}
+
+		html,
+		body {
+			height: 100%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			position: relative;
+		}
+
+		/* 上聯 */
+		#title {
+			width: 40px;
+			height: 800px;
+			font-size: 2rem;
+			/* 文字方向：水平改垂直 */
+			writing-mode: vertical-lr;
+			letter-spacing: 6.5px;
+			position: relative;
+			top: 2.5%;
+			left: -2.5%;
+		}
+
+		/* 下聯 */
+		#title::after {
+			content: "圖畫裡，龍不吟，虎不嘯，小小書僮可笑可笑";
+			width: 40px;
+			height: 800px;
+			font-size: 2rem;
+			position: absolute;
+			top: 0%;
+			left: 825px;
+		}
+
+		/* 棋盤外框 */
+		.container {
+			width: 750px;
+			height: 750px;
+			border: 1px solid #000;
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+			align-content: center;
+			position: relative;
+		}
+
+		/* 棋盤內框 */
+		.container::before {
+			content: "";
+			width: 650px;
+			height: 650px;
+			background: rgba(223, 192, 161, 0.5);
+			position: absolute;
+			top: 50px;
+			z-index: -1;
+		}
+
+		/* 棋盤上半部 */
+		.boxTop {
+			width: 650px;
+			height: 275px;
+			border: 1px solid #000;
+			border-bottom: none;
+			/* 棋盤格線 */
+			background: repeating-linear-gradient(0deg, transparent, transparent 25%, black 25%, black 25.2%), repeating-linear-gradient(90deg, transparent, transparent 12.5%, black 12.5%, black 12.7%);
+			position: relative;
+		}
+
+		/* 上半左斜線 */
+		.boxTop::before {
+			content: "";
+			width: 212px;
+			border-top: 1px solid #000;
+			transform: rotate(40deg);
+			position: absolute;
+			top: 25%;
+			left: 34.5%;
+			z-index: -1;
+		}
+
+		/* 上半右斜線 */
+		.boxTop::after {
+			content: "";
+			width: 212px;
+			border-top: 1px solid #000;
+			transform: rotate(-40deg);
+			position: absolute;
+			top: 25%;
+			left: 34.5%;
+			z-index: -1;
+		}
+
+		/* 楚河漢界 */
+		.boxMiddle {
+			width: 650px;
+			height: 100px;
+			border: 1px solid #000;
+			display: flex;
+			justify-content: space-around;
+			align-items: center;
+		}
+
+		.boxMiddle::before {
+			content: "楚河";
+			font-size: 3rem;
+		}
+
+		.boxMiddle::after {
+			content: "漢界";
+			font-size: 3rem;
+		}
+
+		/* 棋盤下半部 */
+		.boxBottom {
+			width: 650px;
+			height: 275px;
+			border: 1px solid #000;
+			border-top: none;
+			/* 棋盤格線 */
+			background: repeating-linear-gradient(0deg, transparent, transparent 25%, black 25%, black 25.2%), repeating-linear-gradient(90deg, transparent, transparent 12.5%, black 12.5%, black 12.7%);
+			position: relative;
+		}
+
+		/* 下半左斜線 */
+		.boxBottom::before {
+			content: "";
+			width: 212px;
+			border-top: 1px solid #000;
+			transform: rotate(40deg);
+			position: absolute;
+			bottom: 25%;
+			left: 34.5%;
+			z-index: -1;
+		}
+
+		/* 下半右斜線  */
+		.boxBottom::after {
+			content: "";
+			width: 212px;
+			border-top: 1px solid #000;
+			transform: rotate(-40deg);
+			position: absolute;
+			bottom: 25%;
+			left: 34.5%;
+			z-index: -1;
+		}
+
+		/* 車馬象士將 */
+		.row-main-up {
+			width: 650px;
+			height: 50px;
+			display: flex;
+			flex-flow: row wrap;
+			justify-content: space-between;
+		}
+
+		/* 包包 */
+		.row-cannon-up {
+			width: 650px;
+			height: 50px;
+			display: flex;
+			justify-content: space-around;
+			position: absolute;
+			bottom: 32.5%;
+		}
+
+		/* 卒卒卒卒卒 */
+		.row-soldier-up {
+			width: 650px;
+			height: 50px;
+			display: flex;
+			justify-content: space-between;
+			position: absolute;
+			bottom: 7.5%;
+		}
+
+		/* 兵兵兵兵兵 */
+		.row-soldier-down {
+			width: 650px;
+			height: 50px;
+			display: flex;
+			justify-content: space-between;
+			position: absolute;
+			top: 25%;
+		}
+
+		/* 砲砲 */
+		.row-cannon-down {
+			width: 650px;
+			height: 50px;
+			display: flex;
+			justify-content: space-around;
+			position: absolute;
+			top: 50%;
+		}
+
+		/* 俥傌相仕帥 */
+		.row-main-down {
+			width: 650px;
+			height: 50px;
+			display: flex;
+			flex-flow: row wrap;
+			justify-content: space-between;
+			position: absolute;
+			bottom: -17.5%;
+		}
+
+		/* 棋子上半部 */
+		.chessUp {
+			width: 50px;
+			height: 50px;
+			border: 1px solid #000;
+			border-radius: 50%;
+			background: white;
+			font-size: 2rem;
+			text-align: center;
+			line-height: 50px;
+			margin-top: -25px;
+			margin-left: -25px;
+			margin-right: -25px;
+		}
+
+		/* 棋子下半部 */
+		.chessDown {
+			width: 50px;
+			height: 50px;
+			border: 1px solid #000;
+			border-radius: 50%;
+			background: white;
+			color: red;
+			font-size: 2rem;
+			text-align: center;
+			line-height: 50px;
+			margin-top: -25px;
+			margin-left: -25px;
+			margin-right: -25px;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="title">棋盤裡，車無輪，馬無韁，叫聲將軍提防提防</div>
+
+	<div class="container">
+		<div class="boxTop">
+			<div class="row-main-up">
+				<div class="chessUp">車</div>
+				<div class="chessUp">馬</div>
+				<div class="chessUp">象</div>
+				<div class="chessUp">士</div>
+				<div class="chessUp">將</div>
+				<div class="chessUp">士</div>
+				<div class="chessUp">象</div>
+				<div class="chessUp">馬</div>
+				<div class="chessUp">車</div>
+			</div>
+			<div class="row-cannon-up">
+				<div class="chessUp">包</div>
+				<div class="chessUp">包</div>
+			</div>
+			<div class="row-soldier-up">
+				<div class="chessUp">卒</div>
+				<div class="chessUp">卒</div>
+				<div class="chessUp">卒</div>
+				<div class="chessUp">卒</div>
+				<div class="chessUp">卒</div>
+			</div>
+		</div>
+
+		<div class="boxMiddle"></div>
+
+		<div class="boxBottom">
+			<div class="row-soldier-down">
+				<div class="chessDown">兵</div>
+				<div class="chessDown">兵</div>
+				<div class="chessDown">兵</div>
+				<div class="chessDown">兵</div>
+				<div class="chessDown">兵</div>
+			</div>
+			<div class="row-cannon-down">
+				<div class="chessDown">砲</div>
+				<div class="chessDown">砲</div>
+			</div>
+			<div class="row-main-down">
+				<div class="chessDown">俥</div>
+				<div class="chessDown">傌</div>
+				<div class="chessDown">相</div>
+				<div class="chessDown">仕</div>
+				<div class="chessDown">帥</div>
+				<div class="chessDown">仕</div>
+				<div class="chessDown">相</div>
+				<div class="chessDown">傌</div>
+				<div class="chessDown">俥</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+
+</html>
